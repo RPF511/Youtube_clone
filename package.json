@@ -1,0 +1,31 @@
+{
+  "name": "youtube_clone",
+  "version": "1.0.0",
+  "description": "Youtube clone",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RPF511/Youtube_clone.git"
+  },
+  "scripts": {
+    "start": "node src/init.js",
+    "dev": "nodemon -L --exec babel-node src/init.js"
+  },
+  "author": "RPF511",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RPF511/Youtube_clone/issues"
+  },
+  "homepage": "https://github.com/RPF511/Youtube_clone#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongoose": "^6.0.4",
+    "morgan": "^1.10.0",
+    "pug": "^3.0.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.15.0",
+    "@babel/node": "^7.14.9",
+    "@babel/preset-env": "^7.15.0",
+    "nodemon": "^2.0.12"
+  }
+}
