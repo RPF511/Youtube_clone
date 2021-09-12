@@ -4,4 +4,8 @@ block content
     div
         p=video.description
         small=video.createdAt
+        each hashtag in video.hashtags
+            li=hashtag
     a(href=`${video.id}/edit`) Edit Video &rarr;
+    br
+    a(href=`${video.id}/delete`) Delete Video &rarr;
