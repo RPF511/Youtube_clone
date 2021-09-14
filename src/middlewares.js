@@ -1,3 +1,5 @@
+//Session data is not saved in the cookie itself, just the session ID. Session data is stored server-side.
+
 export const localsMiddleware = (req, res, next) => {
     res.locals.siteName = "Youtube_C"
 

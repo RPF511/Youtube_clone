@@ -1,3 +1,5 @@
+//require('dotenv').config(); in this method, we have to include this line to all files which requires .env
+import "dotenv/config";
 import "./db";
 import "./models/Video";
 import "./models/User";
