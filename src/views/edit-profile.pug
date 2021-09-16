@@ -2,8 +2,15 @@ extends base
 
 block content 
     form(method="POST")
-        input(name="name",type="text",required, placeholder="name", value=loggedInUser.name)
-        input(name="email",type="text",required, placeholder="email", value=loggedInUser.email)
-        input(name="username",type="text",required, placeholder="username", value=loggedInUser.username)
-        input(name="location",type="text",required, placeholder="location", value=loggedInUser.location)
+        input(name="name",type="text",required, placeholder="name", value=name)
+        if emailError 
+            span=emailError
+        input(name="email",type="text",required, placeholder="email", value=email)
+        if usernameError 
+            span=usernameError
+        input(name="username",type="text",required, placeholder="username", value=username)
+        input(name="location",type="text",required, placeholder="location", value=location)
+        if passwordError 
+            span=passwordError
+        input(name="password",type="password",required, placeholder="Confirm Password", autocomplete="off")
         input(type="submit", value="Update Profile")

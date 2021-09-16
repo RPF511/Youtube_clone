@@ -4,12 +4,18 @@ block content
     if errorMessage 
         sapn=errorMessage
     form(method="POST")
-        input(name="email",type="text",required, placeholder="email")
-        input(name="username",type="text",required, placeholder="username")
+        if emailError 
+            span=emailError
+        input(name="email",type="text",required, placeholder="email",value=email)
+        if usernameError 
+            span=usernameError
+        input(name="username",type="text",required, placeholder="username",value=username)
         input(name="password",type="password",required, placeholder="password")
-        input(name="confirm password",type="password",required, placeholder="passwordCheck")
-        input(name="name",type="text",required, placeholder="name")
-        input(name="location",type="text",required, placeholder="location")
+        if passwordError 
+            span=passwordError
+        input(name="passwordCheck",type="password",required, placeholder="passwordCheck")
+        input(name="name",type="text",required, placeholder="name",value=name)
+        input(name="location",type="text",required, placeholder="location",value=location)
         input(type="submit", value="Join")
     hr
     div 

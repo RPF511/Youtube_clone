@@ -4,18 +4,30 @@ import fetch from "node-fetch";
 
 export const see = (req, res) => res.send("See User");
 
-export const getJoin = (req, res) => res.render("join",{ pageTitle: "Join"});
+export const getJoin = (req, res) => res.render("join",{ pageTitle: "Join",});
 
 export const postJoin = async (req, res) => {
     const pageTitle = "Join";
     const {name, username,email,password,passwordCheck,location} = req.body;
-    let errorMessage = [];
-    const exists = await User.exists({$or: [{username},{email}]} );
-    if(exists){
-        return res.status(400).render("join", { pageTitle, errorMessage:"this username/email is already taken"});
+    let usernameError = "";
+    let emailError = "";
+    let passwordError = "";
+    let errorExists = 0;
+    //const exists = await User.exists({$or: [{username},{email}]} );
+    if(await User.exists({username})){
+        usernameError= "this username is already taken";
+        errorExists = 1;
+    }
+    if(await User.exists({email})){
+        emailError= "this email is already taken";
+        errorExists = 1;
     }
     if(password !== passwordCheck){
-        return res.status(400).render("join", { pageTitle, errorMessage:"password does not match"});
+        passwordError = "password does not match";
+        errorExists = 1;
+    }
+    if(errorExists){
+        return res.status(400).render("join", {pageTitle: "Join", usernameError,emailError,passwordError, name,username,email,location});
     }
     try{
         await User.create({
@@ -122,16 +134,44 @@ export const finishGithubLogin = async(req,res) => {
 };
 
 export const getEdit = (req, res) => {
-    return res.render("edit-profile", { pageTitle: "Edit Profile"});
+    return res.render("edit-profile", { pageTitle: "Edit Profile", name:req.session.user.name, email:req.session.user.email, username:req.session.user.username, location:req.session.user.location});
 };
 
 export const postEdit = async(req, res) => {
+    //let errorMessages = { usernameError :"" ,emailError :"" ,passwordError :""};
+    let usernameError ="";
+    let emailError ="";
+    let passwordError ="";
+    let errorExists = 0;
+
+
     const {
         session: {
             user: { _id },
         },
-        body:{ name,email,username,location } 
+        body:{ name,email,username,location,password } 
     } = req;
+
+    const currentUser =  await User.findById(_id);
+    const ok = await bcrypt.compare(password, currentUser.password);
+    if(!ok){
+        passwordError = "Wrong PassWord";
+        errorExists = 1;
+    }
+    if ((currentUser.email !== email) && (await User.exists({ email }))) {
+        emailError = "this email is already taken";
+        errorExists = 1;
+    }
+    if ((currentUser.username !== username) && (await User.exists({ username }))) {
+        usernameError = "this username is already taken";
+        errorExists = 1;
+    }
+    if(errorExists){
+        console.log(usernameError);
+        console.log(emailError);
+        console.log(passwordError);
+        return res.status(400).render("edit-profile", {pageTitle: "Edit Profile", usernameError,emailError,passwordError, name,email,username,location});
+    }
 
     const updatedUser = await User.findByIdAndUpdate(_id, {
         name,
@@ -142,7 +182,7 @@ export const postEdit = async(req, res) => {
     //without this option, user.findByIdAndUpdate will return old object
     {new: true}
     );
-    req.session.user = updatedUser;
+    //req.session.user = updatedUser;
 
     // req.session.user = {
     //     ...req.session.user,
