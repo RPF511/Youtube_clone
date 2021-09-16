@@ -9,6 +9,7 @@ export const getJoin = (req, res) => res.render("join",{ pageTitle: "Join"});
 export const postJoin = async (req, res) => {
     const pageTitle = "Join";
     const {name, username,email,password,passwordCheck,location} = req.body;
+    let errorMessage = [];
     const exists = await User.exists({$or: [{username},{email}]} );
     if(exists){
         return res.status(400).render("join", { pageTitle, errorMessage:"this username/email is already taken"});
@@ -120,7 +121,39 @@ export const finishGithubLogin = async(req,res) => {
     }
 };
 
-export const edit = (req, res) => res.send("Edit User");
+export const getEdit = (req, res) => {
+    return res.render("edit-profile", { pageTitle: "Edit Profile"});
+};
+
+export const postEdit = async(req, res) => {
+    const {
+        session: {
+            user: { _id },
+        },
+        body:{ name,email,username,location } 
+    } = req;
+
+    const updatedUser = await User.findByIdAndUpdate(_id, {
+        name,
+        email,
+        username,
+        location
+    }, 
+    //without this option, user.findByIdAndUpdate will return old object
+    {new: true}
+    );
+    req.session.user = updatedUser;
+
+    // req.session.user = {
+    //     ...req.session.user,
+    //     name,
+    //     email,
+    //     username,
+    //     location,
+    // };
+    return res.redirect("/users/edit");
+};
+
 export const remove = (req, res) => res.send("Remove User");
 
 export const search = (req, res) => res.send("Search");
