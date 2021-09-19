@@ -1,4 +1,4 @@
-extends base 
+extends ../base
 
 block content 
     form(method="POST")
@@ -14,3 +14,7 @@ block content
             span=passwordError
         input(name="password",type="password",required, placeholder="Confirm Password", autocomplete="off")
         input(type="submit", value="Update Profile")
+
+        if !loggedInUser.socialOnly
+            hr 
+            a(href="change-password") Change Password &rarr;

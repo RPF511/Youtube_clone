@@ -134,7 +134,7 @@ export const finishGithubLogin = async(req,res) => {
 };
 
 export const getEdit = (req, res) => {
-    return res.render("edit-profile", { pageTitle: "Edit Profile", name:req.session.user.name, email:req.session.user.email, username:req.session.user.username, location:req.session.user.location});
+    return res.render("users/edit-profile", { pageTitle: "Edit Profile", name:req.session.user.name, email:req.session.user.email, username:req.session.user.username, location:req.session.user.location});
 };
 
 export const postEdit = async(req, res) => {
@@ -170,7 +170,7 @@ export const postEdit = async(req, res) => {
         console.log(usernameError);
         console.log(emailError);
         console.log(passwordError);
-        return res.status(400).render("edit-profile", {pageTitle: "Edit Profile", usernameError,emailError,passwordError, name,email,username,location});
+        return res.status(400).render("users/edit-profile", {pageTitle: "Edit Profile", usernameError,emailError,passwordError, name,email,username,location});
     }
 
     const updatedUser = await User.findByIdAndUpdate(_id, {
@@ -201,4 +201,39 @@ export const search = (req, res) => res.send("Search");
 export const logout = (req, res) => {
     req.session.destroy();
     return res.redirect("/");
+};
+
+export const getChangePassword = (req, res) => {
+    return res.render("users/change-password", {pageTitle:"Change Password"});
+};
+
+export const postChangePassword = async(req, res) => {
+    let errorExists = 0;
+    let passwordError = "";
+    let passwordCheckError = "";
+
+    const {
+        session: {
+            user: { _id, password },
+        },
+        body:{ passwordOld, passwordNew, passwordNewCheck } 
+    } = req;
+    const currentUser =  await User.findById(_id);
+    const ok = await bcrypt.compare(passwordOld, currentUser.password);
+    if(!ok){
+        passwordError = "Wrong Password";
+        errorExists = 1;
+    }
+    if(passwordNew !== passwordNewCheck){
+        passwordCheckError = "Password does not match";
+        errorExists = 1;
+    }
+    if(errorExists){
+        return res.status(400).render("users/change-password", {pageTitle: "change-password",passwordError, passwordCheckError});
+    }
+    
+    currentUser.password = passwordNew;
+    currentUser.save();
+    req.session.user.password = currentUser.password;
+    return res.redirect("/users/logout");
 };
