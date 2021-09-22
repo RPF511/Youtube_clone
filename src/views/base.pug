@@ -12,9 +12,13 @@ html(lang="ko")
                 ul
                     li
                         a(href="/") Home
+                    li
+                        a(href="/search") Search
                     if loggedIn
                         li
                             a(href="/videos/upload") Upload Video
+                        li
+                            a(href=`/users/${loggedInUser._id}`) My Profile
                         li
                             a(href="/users/edit") Edit Profile
                         li 
@@ -22,8 +26,6 @@ html(lang="ko")
                         li 
                             //-a(href="/my-profile") #{loggedInUser.name}'s Profile
                     else 
-                        li
-                            a(href="/search") Search
                         li 
                             a(href="/login") Log In
                         li

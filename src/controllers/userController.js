@@ -1,10 +1,19 @@
 import User from "../models/User";
+import Video from "../models/Video";
 import bcrypt from "bcrypt";
 import fetch from "node-fetch";
 
-export const see = (req, res) => res.send("See User");
+export const see = async(req, res) => {
+    const {id} = req.params;
+    const user = await User.findById(id).populate("videos");;
+    if(!user){
+        return res.status(404).render("404", {pageTitle: "User not Found"});
+    }
 
-export const getJoin = (req, res) => res.render("join",{ pageTitle: "Join",});
+    return res.render("users/profile", {pageTitle: `${user.name}`, user});
+};
+
+export const getJoin = (req, res) => res.render("users/join",{ pageTitle: "Join"});
 
 export const postJoin = async (req, res) => {
     const pageTitle = "Join";
@@ -27,7 +36,7 @@ export const postJoin = async (req, res) => {
         errorExists = 1;
     }
     if(errorExists){
-        return res.status(400).render("join", {pageTitle: "Join", usernameError,emailError,passwordError, name,username,email,location});
+        return res.status(400).render("users/join", {pageTitle: "Join", usernameError,emailError,passwordError, name,username,email,location});
     }
     try{
         await User.create({
@@ -39,23 +48,23 @@ export const postJoin = async (req, res) => {
         });
         return res.redirect("/login");
     }catch(error){
-        return res.status(400).render("join", {pageTitle: "Join", errorMessage : error._message});
+        return res.status(400).render("users/join", {pageTitle: "Join", errorMessage : error._message});
     }
     
 };
 
-export const getLogin = (req, res) => res.render("login",{ pageTitle: "Login"});
+export const getLogin = (req, res) => res.render("users/login",{ pageTitle: "Login"});
 
 export const postLogin = async(req, res) => {
     const { username, password } = req.body;
     const pageTitle = "Login";
     const user = await User.findOne({username});
     if (!user){
-        return res.status(400).render("login",{pageTitle, errorMessage:"An account with this username doesn't exists."});
+        return res.status(400).render("users/login",{pageTitle, errorMessage:"An account with this username doesn't exists."});
     }
     const ok = await bcrypt.compare(password, user.password);
     if(!ok){
-        return res.status(400).render("login",{pageTitle, errorMessage:"Wrong PassWord."});
+        return res.status(400).render("users/login",{pageTitle, errorMessage:"Wrong PassWord."});
     }
     req.session.loggedIn = true;
     req.session.user = user;
@@ -201,7 +210,11 @@ export const remove = (req, res) => res.send("Remove User");
 export const search = (req, res) => res.send("Search");
 
 export const logout = (req, res) => {
-    req.session.destroy();
+    try{
+        req.session.destroy();
+    } catch(error){
+        return res.status(400).render("/", {pageTitle: "Home", errorMessage : error._message});
+    }
     return res.redirect("/");
 };
 
