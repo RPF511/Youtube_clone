@@ -64,11 +64,14 @@ export const getUpload = (req,res) => {
 };
 
 export const postUpload = async(req,res) => {
+    //get req.file.path and change the var name to fileUrl
+    const {path: fileUrl} = req.file;
     const {title, description, hashtags} = req.body;
     try{
         await Video.create({
             //title:title same since var name is same
             title,
+            fileUrl,
             description,
             hashtags : Video.formatHashtags(hashtags),
         });

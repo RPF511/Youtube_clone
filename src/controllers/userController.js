@@ -147,9 +147,10 @@ export const postEdit = async(req, res) => {
 
     const {
         session: {
-            user: { _id },
+            user: { _id, avatarUrl },
         },
-        body:{ name,email,username,location,password } 
+        body:{ name,email,username,location,password },
+        file,
     } = req;
 
     const currentUser =  await User.findById(_id);
@@ -174,6 +175,7 @@ export const postEdit = async(req, res) => {
     }
 
     const updatedUser = await User.findByIdAndUpdate(_id, {
+        avatarUrl: file ? file.path : avatarUrl,
         name,
         email,
         username,
@@ -219,7 +221,9 @@ export const postChangePassword = async(req, res) => {
         body:{ passwordOld, passwordNew, passwordNewCheck } 
     } = req;
     const currentUser =  await User.findById(_id);
+
     const ok = await bcrypt.compare(passwordOld, currentUser.password);
+
     if(!ok){
         passwordError = "Wrong Password";
         errorExists = 1;

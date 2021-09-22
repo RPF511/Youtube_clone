@@ -47,5 +47,7 @@ app.use(localsMiddleware);
 app.use("/",rootRouter);
 app.use("/videos", videoRouter);
 app.use("/users", userRouter);
+//express.static exposes the folder to server
+app.use("/uploads", express.static("uploads"));
 
 export default app;

@@ -1,4 +1,5 @@
 /node_modules
 /src/server_ex.js
 /reference
+/uploads
 .env

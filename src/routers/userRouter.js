@@ -1,12 +1,12 @@
 import express from "express";
 import { startGithubLogin, finishGithubLogin, logout, see,  getEdit, postEdit, remove, getChangePassword, postChangePassword } from "../controllers/userController";
-import { protectorMiddleware, publicOnlyMiddleware } from "../middlewares";
+import { avatarUpload, protectorMiddleware, publicOnlyMiddleware, uploadFiles } from "../middlewares";
 const userRouter = express.Router();
 
 userRouter.get(":id",see);
 userRouter.get("/remove", remove);
 //all applys on every methods
-userRouter.route("/edit").all(protectorMiddleware).get(getEdit).post(postEdit);
+userRouter.route("/edit").all(protectorMiddleware).get(getEdit).post(avatarUpload.single("avatar"), postEdit);
 userRouter.get("/github/start", publicOnlyMiddleware, startGithubLogin);
 
 //github/finish is authorization callback url. we can change it at github developer settings(website)
