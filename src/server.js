@@ -49,5 +49,6 @@ app.use("/videos", videoRouter);
 app.use("/users", userRouter);
 //express.static exposes the folder to server
 app.use("/uploads", express.static("uploads"));
+app.use("/static", express.static("assets"));
 
 export default app;
