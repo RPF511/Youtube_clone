@@ -1,11 +1,21 @@
 const path = require("path");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
     entry: "./src/client/js/main.js",
     mode: 'development',
+    watch: true,
+    plugins: [new MiniCssExtractPlugin({
+        //to make css file in assets/css folder
+        filename: "css/styles.css",
+    })],
+    
     output: {
-        filename: "main.js",
-        path: path.resolve(__dirname, "assets", "js"),
+        //to make js file in assets/js folder
+        filename: "js/main.js",
+        path: path.resolve(__dirname, "assets"),
+        //clean output folder before build
+        clean: true,
     },
     module: {
         rules: [
@@ -22,9 +32,8 @@ module.exports = {
             {
                 test:/\.scss$/,
                 //must start with last loader to first loader : in reverse order
-                use: [
-                    "style-loader", "css-loader", "sass-loader"
-                ],
+                //use: ["style-loader", "css-loader", "sass-loader"],
+                use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"],
             }
         ],
     },
