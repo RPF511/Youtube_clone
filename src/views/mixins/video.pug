@@ -1,13 +1,19 @@
-mixin video(info)
-    div
-        h4 
-            a(href=`/videos/${info.id}`)=info.title
-        p=info.description
+mixin video(video)
+    a(href=`/videos/${video.id}`).video-mixin
+        div.video-mixin__thumb
+        div.video-mixin__data
+            span.video-mixin__title=video.title
+            div.video-mixin__meta
+                span #{video.owner.name} 
+                span #{video.meta.views} view
+
+        //- a(href=`/videos/${video.id}`)=video.title
+        //- p=info.description
         
-        small=info.createdAt 
-        hr
-        //*ul 
-            li #{info.rating} / 5
-            li #{info.comments} comments.
-            li Posted  #{info.createdAt}.
-            li #{info.views} #{info.views === 1 ? "view" : "views"}.*//
+        //- small=info.createdAt 
+        //- hr
+        //- ul 
+        //-     li #{info.rating} / 5
+        //-     li #{info.comments} comments.
+        //-     li Posted  #{info.createdAt}.
+        //-     li #{info.views} #{info.views === 1 ? "view" : "views"}.

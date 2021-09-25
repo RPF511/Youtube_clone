@@ -12,7 +12,7 @@ import Video from "../models/Video";
 export const home = async(req, res) => {
     // promise
     try{
-        const videos = await Video.find({}).sort({createdAt:"desc"});
+        const videos = await Video.find({}).sort({createdAt:"desc"}).populate("owner");
         return res.render("home", {pageTitle : "Home", videos: videos});
     } catch(error){
         return res.status(404).render("server-errors");
@@ -138,7 +138,7 @@ export const search = async (req, res) => {
                 //mongodb operator
                 $regex: new RegExp(keyword, "i"),
             },
-        });
+        }).populate("owner");
         
     }
     return res.render("videos/search", {pageTitle:"Search", videos});
