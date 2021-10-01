@@ -18,6 +18,8 @@ block content
         input(name="location",type="text",required, placeholder="location",value=location)
         input(type="submit", value="Join")
     hr
-    div 
-        span Already have an account? 
-        a(href="/login") Log in now &rarr;
+    div
+        include ../partials/social-login
+    div.auth-switch
+        span Don't have an account? 
+        a(href="/join") Create one now &rarr;
