@@ -20,13 +20,26 @@ let volumeValue = 0.5;
 let timelineOnClick = 0;
 video.volume = volumeValue;
 
+const setControlsTimeout = (to) => {
+    controlsMovementTimeout = setTimeout(hideControls,to);
+}
+
+const clearControlsTimeout = () =>{
+    if(controlsMovementTimeout){
+        clearTimeout(controlsMovementTimeout);
+        controlsMovementTimeout = null;
+    }
+}
 
 const changePlayStatus = () => {
     if(video.paused){
         video.play();
+        setControlsTimeout(10);
     }
     else{
-        video.pause()
+        video.pause();
+        videoControls.classList.add("showing");
+        setControlsTimeout(1000);
     }
     playBtnIcon.classList = video.paused ? "fas fa-play" : "fas fa-pause";
 }
@@ -112,26 +125,32 @@ const handleFullScreen = (e) => {
 }
 
 const hideControls = () =>{
-    const hideControls = () => videoControls.classList.remove("showing");
+    videoControls.classList.remove("showing");
 }
 
 const handleMouseMove = () => {
     if (controlsTimeout) {
-        clearTimeout(controlsTimeout);
-        controlsTimeout = null;
+        clearControlsTimeout();
     }
     if(controlsMovementTimeout){
-        clearTimeout(controlsMovementTimeout);
-        controlsMovementTimeout = null;
+        clearControlsTimeout();
     }
     videoControls.classList.add("showing");
-    controlsMovementTimeout = setTimeout(hideControls,3000);
+    setControlsTimeout(1000);
+    
+    
 };
   
 const handleMouseLeave = () => {
-  controlsTimeout = setTimeout(hideControls, 1000);
+    setControlsTimeout(1000);
 };
 
+const keyboardShort = (e) => {
+    console.log("keyboard event "+e.which);
+    if(e.which == 32){
+        changePlayStatus();
+    }
+}
 
 
 playBtn.addEventListener("click", handlePlay);
@@ -146,3 +165,4 @@ fullScreenBtn.addEventListener("click",handleFullScreen);
 videoContainer.addEventListener("mousemove",handleMouseMove);
 videoContainer.addEventListener("mouseleave",handleMouseLeave);
 video.addEventListener("click", videoClick);
+document.addEventListener("keypress", keyboardShort);
