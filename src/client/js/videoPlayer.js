@@ -141,7 +141,7 @@ const handleMouseMove = () => {
     
 };
   
-const handleMouseLeave = () => {
+const handleMouseLeave = () => { 
     setControlsTimeout(1000);
 };
 
@@ -150,6 +150,11 @@ const keyboardShort = (e) => {
     if(e.which == 32){
         changePlayStatus();
     }
+}
+
+const handleEnded = () => {
+    const {id} = videoContainer.dataset;
+    fetch(`/api/videos/${id}/view` , {method : "POST"});
 }
 
 
@@ -166,3 +171,4 @@ videoContainer.addEventListener("mousemove",handleMouseMove);
 videoContainer.addEventListener("mouseleave",handleMouseLeave);
 video.addEventListener("click", videoClick);
 document.addEventListener("keypress", keyboardShort);
+video.addEventListener("ended", handleEnded);

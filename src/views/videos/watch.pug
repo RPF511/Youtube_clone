@@ -1,7 +1,7 @@
 extends ../base.pug 
 
 block content
-    div#videoContainer
+    div#videoContainer(data-id=video._id)
         video(src="/"+video.fileUrl)
         div#videoControls.videoControls.showing
             input(type="range",step="1", value="0", min="0")#timeline.videoControls__timeline
@@ -25,7 +25,7 @@ block content
 
 
     //- div
-    //-     p=video.description
+    //-       p=video.description
     //-     small=video.createdAt
     //-     each hashtag in video.hashtags
     //-         li=hashtag
