@@ -76,24 +76,29 @@ export const postEdit = async(req,res) => {
 }; 
 
 export const getUpload = (req,res) => {
+    
     return res.render("videos/upload", {pageTitle: "Upload Video"});
 };
 
-export const postUpload = async(req,res) => {
+export const postUpload = async (req, res) => {
     const {
-        user: {_id},
+        user: { _id },
     } = req.session;
-    //get req.file.path and change the var name to fileUrl
-    const {path: fileUrl} = req.file;
-    const {title, description, hashtags} = req.body;
-    try{
+    const { video, thumb } = req.files;
+    console.log(video);
+    console.log(thumb);
+    // get req.file.path and change the var name to fileUrl
+    // const {path: fileUrl} = req.file;
+    const { title, description, hashtags } = req.body;
+    try {
         const newVideo = await Video.create({
             //title:title same since var name is same
             title,
-            fileUrl,
+            fileUrl: video[0].path,
+            thumbUrl: thumb[0].path,
             description,
-            hashtags : Video.formatHashtags(hashtags),
-            owner:_id,
+            hashtags: Video.formatHashtags(hashtags),
+            owner: _id,
         });
         const user = await User.findById(_id);
         user.videos.push(newVideo._id);
@@ -124,7 +129,12 @@ export const deleteVideo = async(req, res) => {
     if(String(video.owner) !== String(_id)){
         return res.status(403).redirect("/");
     }
-
+    const currentUser = await User.findById(_id);
+    const idx = currentUser.videos ? currentUser.videos.indexOf(id) : -1;
+    if(idx!== -1){
+        currentUser.videos.splice(idx,1);
+    }
+    currentUser.save();
     await Video.findByIdAndDelete(id);
     return res.redirect("/");
 };
