@@ -3,6 +3,7 @@ import "./models/Video";
 import express from "express";
 import session from "express-session";
 import morgan from "morgan";
+import flash from "express-flash";
 import rootRouter from "./routers/rootRouter";
 import userRouter from "./routers/userRouter";
 import videoRouter from "./routers/videoRouter";
@@ -43,6 +44,7 @@ app.use((req,res,next) => {
 });
 */
 
+app.use(flash());
 //localsMiddleware must come after session middleware
 app.use(localsMiddleware);
 app.use("/",rootRouter);

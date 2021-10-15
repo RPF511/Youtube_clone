@@ -41,6 +41,7 @@ export const getEdit = async(req, res) => {
         user: {_id}
     }= req.session;
     if(String(video.owner) !== String(_id)){
+        req.flash("error", "Not authorized");
         return res.status(403).redirect("/");
     }
 
@@ -64,6 +65,7 @@ export const postEdit = async(req,res) => {
         user: { _id },
     } = req.session;
     if(String(video.owner) !== String(_id)){
+        req.flash("error", "Not authorized");
         return res.status(403).redirect("/");
     }
 
@@ -72,6 +74,7 @@ export const postEdit = async(req,res) => {
         title, description, 
         hashtags : Video.formatHashtags(hashtags),
     });
+    req.flash("success", "Changes Saved");
     return res.redirect(`/videos/${id}`);
 }; 
 
@@ -103,6 +106,7 @@ export const postUpload = async (req, res) => {
         const user = await User.findById(_id);
         user.videos.push(newVideo._id);
         user.save();
+        req.flash("success", "Video Uploaded");
         return res.redirect("/");
     } catch(error){
         //console.log(error);
@@ -127,6 +131,7 @@ export const deleteVideo = async(req, res) => {
         user: { _id },
     } = req.session;
     if(String(video.owner) !== String(_id)){
+        req.flash("error", "Not authorized");
         return res.status(403).redirect("/");
     }
     const currentUser = await User.findById(_id);
@@ -136,6 +141,7 @@ export const deleteVideo = async(req, res) => {
     }
     currentUser.save();
     await Video.findByIdAndDelete(id);
+    req.flash("success", "Video Deleted");
     return res.redirect("/");
 };
 
