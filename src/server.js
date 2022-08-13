@@ -21,6 +21,8 @@ app.set("views", process.cwd()+ "/src/views");
 app.use(logger);
 app.use(express.urlencoded({extended:true}));
 
+//middleware that convert stringified string to js object
+app.use(express.json());
 //session must be declared before routers
 app.use(
     session({

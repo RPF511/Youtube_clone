@@ -146,7 +146,7 @@ const handleMouseLeave = () => {
 };
 
 const keyboardShort = (e) => {
-    console.log("keyboard event "+e.which);
+    // console.log("keyboard event "+e.which);
     if(e.which == 32){
         changePlayStatus();
     }
