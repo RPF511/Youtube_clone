@@ -11,7 +11,7 @@ const s3 = new aws.S3({
     }
 });
 
-const multerUPloader = multerS3({
+const multerUploader = multerS3({
     s3: s3,
     bucket: 'youtube-clone-rpf511',
 });
@@ -50,12 +50,12 @@ export const avatarUpload = multer({
     limits:{
         fileSize: 3000000,
     },
-    // storage : multerUPloader,
+    storage : multerUploader,
 });
 export const videoUpload = multer({ 
     dest:"uploads/videos/", 
     limits:{
         fileSize: 100000000,
     },
-    // storage : multerUPloader,
+    storage : multerUploader,
 });
