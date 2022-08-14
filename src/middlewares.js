@@ -13,7 +13,7 @@ const s3 = new aws.S3({
 
 const multerUploader = multerS3({
     s3: s3,
-    bucket: 'youtube-clone-rpf511',
+    bucket: 'youtube-clone-rpf511-uploader',
 });
 
 export const localsMiddleware = (req, res, next) => {
