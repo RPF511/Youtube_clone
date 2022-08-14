@@ -107,6 +107,7 @@ export const postUpload = async (req, res) => {
             hashtags: Video.formatHashtags(hashtags),
             owner: _id,
         });
+        console.log(newVideo);
         const user = await User.findById(_id);
         user.videos.push(newVideo._id);
         user.save();
