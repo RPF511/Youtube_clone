@@ -25,12 +25,15 @@ const s3ImageUploader = multerS3({
 
 const isHeroku = process.env.NODE_ENV === "production";
 
+console.log(isHeroku);
+
 
 export const localsMiddleware = (req, res, next) => {
     res.locals.siteName = "Youtube_C"
 
     res.locals.loggedIn = Boolean(req.session.loggedIn);
     res.locals.loggedInUser = req.session.user || {};
+    res.locals.isHeroku = isHeroku;
     //console.log(res.locals.loggedInUser)
     next();
 };
