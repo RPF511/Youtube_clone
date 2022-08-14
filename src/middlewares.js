@@ -14,21 +14,23 @@ const s3 = new aws.S3({
 const s3VideoUploader = multerS3({
     s3: s3,
     bucket: 'youtube-clone-rpf511/videos',
-    Condition: {
-        StringEquals: {
-        "s3:x-amz-acl": ["public-read"],
-        },
-    }
+    // Condition: {
+    //     StringEquals: {
+    //     "s3:x-amz-acl": ["public-read"],
+    //     },
+    // }
+    acl : "public-read",
 });
 
 const s3ImageUploader = multerS3({
     s3:s3,
     bucket: 'youtube-clone-rpf511/images',
-    Condition: {
-        StringEquals: {
-        "s3:x-amz-acl": ["public-read"],
-        },
-    }
+    // Condition: {
+    //     StringEquals: {
+    //     "s3:x-amz-acl": ["public-read"],
+    //     },
+    // }
+    acl : "public-read",
 });
 
 const isHeroku = process.env.NODE_ENV === "production";
