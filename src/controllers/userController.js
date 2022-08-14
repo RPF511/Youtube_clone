@@ -3,6 +3,8 @@ import Video from "../models/Video";
 import bcrypt from "bcrypt";
 import fetch from "node-fetch";
 
+const isHeroku = process.env.NODE_ENV === "production";
+
 export const see = async(req, res) => {
     const {id} = req.params;
     const user = await User.findById(id).populate("videos");;
@@ -184,7 +186,7 @@ export const postEdit = async(req, res) => {
     }
 
     const updatedUser = await User.findByIdAndUpdate(_id, {
-        avatarUrl: file ? file.location : avatarUrl,
+        avatarUrl: file ? (isHeroku ? file.location : file.path) : avatarUrl,
         name,
         email,
         username,
