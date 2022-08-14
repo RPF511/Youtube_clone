@@ -11,10 +11,15 @@ const s3 = new aws.S3({
     }
 });
 
-const multerUploader = multerS3({
+const s3VideoUploader = multerS3({
     s3: s3,
-    bucket: 'youtube-clone-rpf511-uploader',
+    bucket: 'youtube-clone-rpf511/videos',
 });
+
+const s3ImageUploader = multerS3({
+    s3:s3,
+    bucket: 'youtube-clone-rpf511/images',
+})
 
 export const localsMiddleware = (req, res, next) => {
     res.locals.siteName = "Youtube_C"
@@ -50,12 +55,12 @@ export const avatarUpload = multer({
     limits:{
         fileSize: 3000000,
     },
-    storage : multerUploader,
+    storage : s3ImageUploader,
 });
 export const videoUpload = multer({ 
     dest:"uploads/videos/", 
     limits:{
         fileSize: 100000000,
     },
-    storage : multerUploader,
+    storage : s3VideoUploader,
 });
