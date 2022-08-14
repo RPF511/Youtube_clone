@@ -11,7 +11,7 @@ module.exports = {
         commentSection: BASE_JS+"commentSection.js",
     },
     mode: 'development',
-    watch: true,
+    // watch: true,
     plugins: [new MiniCssExtractPlugin({
         //to make css file in assets/css folder
         filename: "css/styles.css",
